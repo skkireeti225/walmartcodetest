@@ -23,7 +23,13 @@ const getUsers = () => {
 
 const getListOfAgesOfUsersWith = (item) => {
     const dataAccessMethod = () => {
-        // fill me in :)
+        let returnData = []
+        const usersWithItems = _.filter(_.keys(db.itemsOfUserByUsername), username => db.itemsOfUserByUsername[username].includes(item))
+        const ageGroups = _.groupBy(_.filter(db.usersById, user => usersWithItems.includes(user.username)), userInfo => userInfo.age)
+        _.forEach(_.keys(ageGroups), ageGroup => {
+            returnData.push({age: ageGroup, count: ageGroups[ageGroup].length})
+        })
+        return returnData
     }
     return mockDBCall(dataAccessMethod);
 }

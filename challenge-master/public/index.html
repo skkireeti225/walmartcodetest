@@ -3,9 +3,94 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png" />
     <title>Walmex Challenge</title>
+    <style>
+        th {
+            padding: 10px 20px;
+            border-bottom: 1px solid black;
+        }
+        td {
+            padding: 10px 20px;
+            border-bottom: 1px solid black;
+        }
+    </style>
 </head>
 <body>
-    Fill me in :)
+    <h1>All Users</h1>
+    <p>Users and thier age</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <h1>Age Demographic of Users with</h1>
+    <select id="ageDemography">
+        <option>---Select---</option>
+        <option value="carrot">carrot</option>
+        <option value="apple">apple</option>
+        <option value="grapes">grapes</option>
+        <option value="cake">cake</option>
+        <option value="crackers">crackers</option>
+        <option value="chips">chips</option>
+        <option value="tv">tv</option>
+        <option value="ham">ham</option>
+        <option value="beef">beef</option>
+    </select>
+    <table>
+        <thead>
+            <tr>
+                <th>Age</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody id="table-body-2">
+        </tbody>
+    </table>
 </body>
+<script>
+
+    fetch('/users').then(res => res.json()).then(data => {
+        setTable(data, document.getElementById("table-body"))
+    })
+    function getTableRow(singleRowData) {
+        const row = document.createElement('tr')
+        Object.keys(singleRowData).forEach(colData => {
+            const td = document.createElement('td')
+            td.textContent = singleRowData[colData]
+            row.appendChild(td)
+        })
+        return row
+    }
+
+    function setTable(data, tableBody) {
+        data.forEach(singleRowData => {
+            const row = getTableRow(singleRowData)
+            tableBody.appendChild(row)
+        })
+    }
+    document.getElementById("ageDemography").onchange = function(event) {
+        const value = event.target.value
+        const tableBody = document.getElementById("table-body-2")
+        fetch(`/users/age?itemToLookup=${value}`).then(res => res.json()).then(data => {
+            tableBody.innerHTML = ''
+            setTable(data, tableBody)
+        })
+    }
+    
+</script>
 </html>
+
+
+
